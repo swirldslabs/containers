@@ -104,6 +104,7 @@ jobs:
     runs-on: swirldslabs-infrastructure-linux-medium
     needs:
       - safety-checks
+      - httpd-oidc-images
     if: ${{ github.event.inputs.dry-run-enabled != 'true' && github.ref_name == 'main' }}
     steps:
       - name: Harden Runner
