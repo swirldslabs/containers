@@ -1,0 +1,43 @@
+###################################
+##### Global Protection Rule ######
+###################################
+# NOTE: This rule is overriden by the more specific rules below. This is the catch-all rule for all files not covered by the more specific rules below.
+*                                               @swirldslabs/release-engineering-managers @swirldslabs/product-security
+
+############################
+#####  Project Files  ######
+############################
+
+/apache-httpd-oidc/                             @swirldslabs/release-engineering-managers @swirldslabs/product-security
+
+#########################
+#####  Core Files  ######
+#########################
+
+# NOTE: Must be placed last to ensure enforcement over all other rules
+
+# Protection Rules for Github Configuration Files and Actions Workflows
+/.github/                                       @swirldslabs/release-engineering-managers
+/.github/workflows/                             @swirldslabs/release-engineering-managers @swirldslabs/product-security @swirldslabs/devops-ci
+
+
+# Codacy Tool Configurations
+/config/                                        @swirldslabs/release-engineering-managers
+.remarkrc                                       @swirldslabs/release-engineering-managers
+
+# Semantic Release Configuration
+.releaserc                                      @swirldslabs/release-engineering-managers
+
+# Self-protection for root CODEOWNERS files (this file should not exist and should definitely require approval)
+/CODEOWNERS                                     @swirldslabs/release-engineering-managers
+
+# Protect the repository root files
+/README.md                                      @swirldslabs/release-engineering-managers
+**/LICENSE                                      @swirldslabs/release-engineering-managers
+
+# CodeCov configuration
+**/codecov.yml                                  @swirldslabs/release-engineering-managers
+
+# Git Ignore definitions
+**/.gitignore                                   @swirldslabs/release-engineering-managers
+**/.gitignore.*                                 @swirldslabs/release-engineering-managers
