@@ -2,13 +2,13 @@
 ##### Global Protection Rule ######
 ###################################
 # NOTE: This rule is overriden by the more specific rules below. This is the catch-all rule for all files not covered by the more specific rules below.
-*                                               @hashgraph/release-engineering-managers @hashgraph/product-security
+*                                               @swirldslabs/release-engineering-managers @swirldslabs/product-security
 
 ############################
 #####  Project Files  ######
 ############################
 
-/apache-httpd-oidc/                             @hashgraph/release-engineering-managers @hashgraph/product-security
+/apache-httpd-oidc/                             @swirldslabs/release-engineering-managers @swirldslabs/product-security
 
 #########################
 #####  Core Files  ######
@@ -17,27 +17,27 @@
 # NOTE: Must be placed last to ensure enforcement over all other rules
 
 # Protection Rules for Github Configuration Files and Actions Workflows
-/.github/                                       @hashgraph/release-engineering-managers
-/.github/workflows/                             @hashgraph/release-engineering-managers @hashgraph/product-security @hashgraph/devops-ci
+/.github/                                       @swirldslabs/release-engineering-managers
+/.github/workflows/                             @swirldslabs/release-engineering-managers @swirldslabs/product-security @swirldslabs/devops-ci
 
 
 # Codacy Tool Configurations
-/config/                                        @hashgraph/release-engineering-managers
-.remarkrc                                       @hashgraph/release-engineering-managers
+/config/                                        @swirldslabs/release-engineering-managers
+.remarkrc                                       @swirldslabs/release-engineering-managers
 
 # Semantic Release Configuration
-.releaserc                                      @hashgraph/release-engineering-managers
+.releaserc                                      @swirldslabs/release-engineering-managers
 
 # Self-protection for root CODEOWNERS files (this file should not exist and should definitely require approval)
-/CODEOWNERS                                     @hashgraph/release-engineering-managers
+/CODEOWNERS                                     @swirldslabs/release-engineering-managers
 
 # Protect the repository root files
-/README.md                                      @hashgraph/release-engineering-managers
-**/LICENSE                                      @hashgraph/release-engineering-managers
+/README.md                                      @swirldslabs/release-engineering-managers
+**/LICENSE                                      @swirldslabs/release-engineering-managers
 
 # CodeCov configuration
-**/codecov.yml                                  @hashgraph/release-engineering-managers
+**/codecov.yml                                  @swirldslabs/release-engineering-managers
 
 # Git Ignore definitions
-**/.gitignore                                   @hashgraph/release-engineering-managers
-**/.gitignore.*                                 @hashgraph/release-engineering-managers
+**/.gitignore                                   @swirldslabs/release-engineering-managers
+**/.gitignore.*                                 @swirldslabs/release-engineering-managers
