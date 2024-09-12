@@ -21,7 +21,6 @@ mkdir -p /var/run/apache2
 
 ### Clean HTML Root Directory ###
 rm -rf /var/www/html/*
-#touch /var/www/html/test-indices.txt
 
 ### Setup Folder Ownership & Permissions ###
 # Log Directory
