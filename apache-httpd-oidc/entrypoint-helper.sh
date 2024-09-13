@@ -29,6 +29,7 @@ export HTTPD_SITE_SSL_CERT_FILE HTTPD_SITE_SSL_KEY_FILE HTTPD_SITE_CA_FILE
 # OIDC Support
 export OIDC_AUTH_ENABLED OIDC_PROVIDER_METADATA_URL OIDC_CLIENT_ID OIDC_REDIRECT_URI
 export OIDC_CLIENT_SECRET OIDC_CRYPTO_PASSPHRASE
+export OIDC_SCOPE OIDC_REMOTE_USER_CLAIM
 
 # GCSFuse Support
 export GCS_FUSE_ENABLED GCS_FUSE_CONFIG_FILE GCS_FUSE_BUCKET_NAME GCS_FUSE_MOUNT_POINT
@@ -155,16 +156,36 @@ function configure_virtual_hosts {
 }
 
 function configure_oidc_protection {
-  export OIDC_AUTH_ENABLED
+  export OIDC_AUTH_ENABLED OIDC_SCOPE
 
   if [[ "${OIDC_AUTH_ENABLED}" != true && "${OIDC_AUTH_ENABLED}" -lt 1 ]]; then
     log.notice "Virtual host OIDC authentication is disabled"
     return "0"
   fi
 
+  configure_oidc_remote_user_claim || return "${?}"
+
+  if [[ -z "${OIDC_SCOPE}" ]]; then
+    log.notice "Defaulting the OIDC_SCOPE variable, because no value was provided [openid email profile]"
+    OIDC_SCOPE="openid email profile"
+  else
+    log.notice "Configuring the OIDC scope using the provided values [${OIDC_SCOPE}]"
+  fi
+
   log.notice "Enabling OIDC authentication for the virtual host [${OIDC_PROVIDER_METADATA_URL}]"
   a2enmod auth_openidc >/dev/null || return "${?}"
   a2enconf oidc-provider >/dev/null
+  return "${?}"
+}
+
+function configure_oidc_remote_user_claim {
+  export OIDC_REMOTE_USER_CLAIM
+
+  [[ -z "${OIDC_REMOTE_USER_CLAIM}" ]] && return "0"
+
+  log.notice "Configuring the OIDC remote user claim [${OIDC_REMOTE_USER_CLAIM}]"
+  local path="${HTTPD_CONF_DIRECTORY}/conf-available/oidc-provider.conf"
+  uncomment_config_element "${path}" "OIDCRemoteUserClaim"
   return "${?}"
 }
 
