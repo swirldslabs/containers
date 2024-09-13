@@ -20,7 +20,7 @@ export HTTPD_GLOBAL_SERVER_NAME HTTPD_DETECT_GLOBAL_SERVER_NAME
 export HTTPD_RENDER_SITE_CONFIG
 
 # Site Configuration
-export HTTPD_SITE_ROOT_PATH HTTPD_SITE_SERVER_NAME HTTPD_SITE_ADMIN_EMAIL
+export HTTPD_SITE_ROOT_PATH HTTPD_SITE_SERVER_NAME HTTPD_SITE_ADMIN_EMAIL HTTPD_SITE_DIRECTORY_INDEX
 
 # SSL Support
 export HTTPD_SITE_SSL_ENABLED HTTPD_SITE_SSL_REDIRECT_ENABLED
@@ -112,11 +112,18 @@ function configure_server_name {
 }
 
 function configure_virtual_hosts {
-  export HTTPD_RENDER_SITE_CONFIG HTTPD_SITE_ROOT_PATH
+  export HTTPD_RENDER_SITE_CONFIG HTTPD_SITE_ROOT_PATH HTTPD_SITE_DIRECTORY_INDEX
 
   if [[ "${HTTPD_RENDER_SITE_CONFIG}" != true && "${HTTPD_RENDER_SITE_CONFIG}" -lt 1 ]]; then
     log.warning "Site configuration rendering disabled"
     return "0"
+  fi
+
+  if [[ -z "${HTTPD_SITE_DIRECTORY_INDEX}" ]]; then
+    log.notice "Directory index has been disabled by default, because the HTTPD_SITE_DIRECTORY_INDEX variable was not set"
+    HTTPD_SITE_DIRECTORY_INDEX="disabled"
+  else
+    log.notice "Directory index support has been enabled, using user provided index file name [${HTTPD_SITE_DIRECTORY_INDEX}]"
   fi
 
   if [[ -z "${HTTPD_SITE_ROOT_PATH}" ]]; then
