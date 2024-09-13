@@ -6,6 +6,7 @@ set -eo pipefail
 source /usr/local/bin/entrypoint-helper.sh
 
 configure_server_name
+configure_server_ports
 configure_virtual_hosts
 configure_oidc_protection
 

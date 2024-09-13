@@ -23,6 +23,7 @@ export HTTPD_RENDER_SITE_CONFIG
 export HTTPD_SITE_ROOT_PATH HTTPD_SITE_SERVER_NAME HTTPD_SITE_ADMIN_EMAIL HTTPD_SITE_DIRECTORY_INDEX
 
 # SSL Support
+export HTTPD_SITE_HTTP_PORT HTTPD_SITE_HTTPS_PORT
 export HTTPD_SITE_SSL_ENABLED HTTPD_SITE_SSL_REDIRECT_ENABLED
 export HTTPD_SITE_SSL_CERT_FILE HTTPD_SITE_SSL_KEY_FILE HTTPD_SITE_CA_FILE
 
@@ -88,6 +89,40 @@ function execute_gcs_fuse_driver {
 
   /usr/bin/gcsfuse "${args[@]}" "${GCS_FUSE_BUCKET_NAME}" "${GCS_FUSE_MOUNT_POINT}"
   return "${?}"
+}
+
+function configure_server_ports {
+  export HTTPD_SITE_HTTP_PORT HTTPD_SITE_HTTP_PORT
+  local provided="false"
+
+  if [[ -z "${HTTPD_SITE_HTTP_PORT}" || "${HTTPD_SITE_HTTP_PORT}" -le 0 || "${HTTPD_SITE_HTTP_PORT}" -ge 65536 ]]; then
+    log.warning "Defaulting the HTTPD_SITE_HTTP_PORT variable because no reasonable value was provided [8080]"
+    HTTPD_SITE_HTTP_PORT="8080"
+  else
+    log.notice "Configuring the HTTP port with the supplied value [${HTTPD_SITE_HTTP_PORT}]"
+    provided="true"
+  fi
+
+  if [[ -z "${HTTPD_SITE_HTTPS_PORT}" || "${HTTPD_SITE_HTTPS_PORT}" -le 0 || "${HTTPD_SITE_HTTPS_PORT}" -ge 65536 ]]; then
+    log.warning "Defaulting the HTTPD_SITE_HTTPS_PORT variable because no reasonable value was provided [8443]"
+    HTTPD_SITE_HTTPS_PORT="8443"
+  else
+    log.notice "Configuring the HTTPS port with the supplied value [${HTTPD_SITE_HTTPS_PORT}]"
+    provided="true"
+  fi
+
+  if [[ "${provided}" == true ]]; then
+    log.notice "Rewriting HTTPD ports configuration [${HTTPD_SITE_HTTP_PORT}/http, ${HTTPD_SITE_HTTPS_PORT}/https]"
+    # Rewrite ports.conf to use 8080 & 8443
+    </etc/apache2/ports.conf \
+      perl -pe "s/Listen\s+8080/Listen ${HTTPD_SITE_HTTP_PORT}/g" | \
+      perl -pe "s/Listen\s+8443/Listen ${HTTPD_SITE_HTTPS_PORT}/g" | \
+      tee /etc/apache2/ports.conf.tmp >/dev/null
+    cp -f /etc/apache2/ports.conf.tmp /etc/apache2/ports.conf
+    rm -f /etc/apache2/ports.conf.tmp
+  fi
+
+  return "0"
 }
 
 function configure_server_name {
