@@ -72,9 +72,9 @@ function execute_gcs_fuse_driver {
 
   if [[ -n "${GCS_FUSE_JWT_CREDENTIALS}" ]]; then
     mkdir -p "${GCS_FUSE_RUN_DIRECTORY}" >/dev/null 2>&1 || return "${?}"
-    tee "${GCS_FUSE_JWT_CREDENTIALS}/adc.json" <<<"${GCS_FUSE_JWT_CREDENTIALS}" >/dev/null || return "${?}"
-    log.notice "execute_gcs_fuse_driver(): Credentials loaded from supplied JWT variable [${GCS_FUSE_JWT_CREDENTIALS}/adc.json]"
-    args+=("--key-file" "${GCS_FUSE_JWT_CREDENTIALS}/adc.json")
+    tee "${GCS_FUSE_RUN_DIRECTORY}/adc.json" <<<"${GCS_FUSE_JWT_CREDENTIALS}" >/dev/null || return "${?}"
+    log.notice "execute_gcs_fuse_driver(): Credentials loaded from supplied JWT variable [${GCS_FUSE_RUN_DIRECTORY}/adc.json]"
+    args+=("--key-file" "${GCS_FUSE_RUN_DIRECTORY}/adc.json")
   else
     log.notice "execute_gcs_fuse_driver(): Credentials loaded from supplied GOOGLE_APPLICATION_CREDENTIALS variable [${GOOGLE_APPLICATION_CREDENTIALS}]"
     args+=("--key-file" "${GOOGLE_APPLICATION_CREDENTIALS}")
