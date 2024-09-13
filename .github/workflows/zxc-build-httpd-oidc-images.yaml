@@ -133,8 +133,8 @@ jobs:
           load: ${{ steps.registry.outputs.operation == 'load' }}
           tags: |
             ${{ steps.registry.outputs.prefix }}/apache-httpd-oidc:latest
-            ${{ steps.registry.outputs.prefix }}/apache-httpd-oidc:v${{ steps.docker-tag.outputs.version }}
-            ${{ steps.registry.outputs.prefix }}/apache-httpd-oidc:v${{ steps.docker-tag.outputs.version }}-${{ inputs.base-os-image }}
+            ${{ steps.registry.outputs.prefix }}/apache-httpd-oidc:${{ steps.docker-tag.outputs.version }}
+            ${{ steps.registry.outputs.prefix }}/apache-httpd-oidc:${{ steps.docker-tag.outputs.version }}-${{ inputs.base-os-image }}
           build-args: |
             SOURCE_DATE_EPOCH=${{ steps.commit.outputs.source-date }}
             UBUNTU_TAG=${{ inputs.base-os-image }}
