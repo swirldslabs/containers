@@ -18,7 +18,7 @@
 
 # Protection Rules for Github Configuration Files and Actions Workflows
 /.github/                                       @swirldslabs/release-engineering-managers
-/.github/workflows/                             @swirldslabs/release-engineering-managers @swirldslabs/product-security @swirldslabs/devops-ci
+/.github/workflows/                             @swirldslabs/release-engineering-managers @swirldslabs/product-security @swirldslabs/platform-ci
 
 
 # Codacy Tool Configurations
