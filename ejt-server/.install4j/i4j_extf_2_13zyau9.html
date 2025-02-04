@@ -1,0 +1,50 @@
+<html><body><h3>
+  Configuring floating licenses in end-user installations
+</h3>
+
+<p>
+ej-technologies' products offer a floating license mode in the license dialog.
+Choose <b>Help-&gt;Enter License Key</b> from the main menu in the JProfiler GUI or
+the install4j IDE and select the <b>Floating license</b> radio button.
+</p>
+<p>
+The "Name" and "Company" fields are informational only, unless you choose to restrict
+the allowed values for the "Name" field as described in <tt>README.TXT</tt>. In the
+license server field you have to enter the hostname of the computer where the license
+server is running. Instead of a host name, an IP address can also be used.
+</p>
+<p>
+If have a floating license for a certain major version of a product, you can
+use older versions of the same product with that floating license as well.
+</p>
+
+<br>
+<h3>
+  Configuring floating licenses on the server
+</h3>
+
+<p>
+  All floating license keys are stored in the file
+</p>
+<pre>
+    license.txt
+</pre>
+<p>
+    in the installation directory. The license file must contain at least one
+    valid floating license for the license server to start up successfully.
+</p>
+<p>
+    To add new license keys, you can run the <tt>updateLicenseKeys</tt> executable.
+    The license file must contain one floating license key
+    per line, comments start with '#'.
+</p>
+<p>
+  This information is also available in <tt>README.TXT</tt>. Please see that documentation
+  for help on how to start the license server as a service and on how to enable encryption
+  and mutual authentication. Should you require any additional assistance, please contact
+</p>
+<pre>
+    <a href="mailto:support@ej-technologies.com">support@ej-technologies.com</a>
+</pre>
+</body>
+</html>

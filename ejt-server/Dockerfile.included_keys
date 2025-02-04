@@ -1,0 +1,34 @@
+FROM eclipse-temurin:21-jre-alpine
+
+ENV TZ="UTC" \
+  PUID="1000" \
+  PGID="1000"
+
+COPY encryption* license.txt blocked_ip.txt ip.txt users.txt *.template *.properties docker/logback.xml /config/
+COPY lib /opt/ejtserver/lib/
+COPY bin /opt/ejtserver/bin/
+COPY .install4j /opt/ejtserver/.install4j/
+COPY docker/entrypoint.sh /
+
+RUN apk update && \
+    apk add su-exec tzdata shadow && \
+    chmod a+x /entrypoint.sh && \
+    mkdir -p /config /opt/ejtserver && \
+    groupadd -f -g ${PGID} ejt && \
+    useradd -o -s /bin/sh -d /config -u ${PUID} -g ejt -m ejt && \
+    ln -sf /config /opt/ejtserver/config && \
+    chown -R ejt. /config /opt/ejtserver && \
+    ln -sf /opt/ejtserver/bin/admin /usr/local/bin/admin && \
+    ln -sf /opt/ejtserver/bin/ejtserver /usr/local/bin/ejtserver && \
+    rm -rf /tmp/* /var/tmp/*
+
+EXPOSE 11862
+
+WORKDIR /config
+VOLUME [ "/config" ]
+
+ENTRYPOINT [ "/entrypoint.sh" ]
+CMD [ "/usr/local/bin/ejtserver", "start-launchd" ]
+
+HEALTHCHECK --interval=10s --timeout=5s \
+  CMD ejtserver status || exit 1

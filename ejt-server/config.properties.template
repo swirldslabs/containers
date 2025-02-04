@@ -1,0 +1,27 @@
+# specify port for license server
+# the default port is 11862
+port=11862
+
+# specify the maximum remote checkout time in days
+# the default is one day, set to 0 to disallow remote checkout
+maxCheckoutDays=1
+
+# Uncomment if you want to bind the license server to a specific IP address.
+# By default, the license server is bound to all local IP addresses
+# ip=192.168.0.1
+
+# Uncomment if you don't want to use encryption and authentication.
+# If encryption is used (the default), the client authentication file in
+# encryption/client.ks will have to be provided in the JProfiler/install4j UI.
+# encrypted=false
+
+# Uncomment if you want to see host names instead of IP addresses in
+# the log files
+# displayHostNames=true
+
+# Uncomment and configure below if you would like to restrict remote admin access in encrypted mode.
+# Connections from loopback addresses and the local IP address used by the server are always allowed.
+# To connect from a remote location, the file encryption/admin.ks must be copied to to authenticate
+# as the admin user.
+# If encryption and authentication are switched off, only local admin connections are allowed.
+# admin.ip=192.168.1.2
