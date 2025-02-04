@@ -115,7 +115,8 @@ jobs:
       - name: Build Image
         uses: docker/build-push-action@5cd11c3a4ced054e52742c5fd54dca954e0edd85 # v6.7.0
         with:
-          context: ${{ github.workspace }}/apache-httpd-oidc
+          context: ${{ github.workspace }}/ejt-server
+          file: ${{ github.workspace }}/ejt-server/Dockerfile.external_keys
           platforms: ${{ inputs.platforms }}
           push: ${{ steps.registry.outputs.operation == 'push' }}
           load: ${{ steps.registry.outputs.operation == 'load' }}
