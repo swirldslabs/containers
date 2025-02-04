@@ -37,3 +37,10 @@ jobs:
     with:
       tag-version: v0.0.0-${{ github.sha }}
       dry-run-enabled: true
+
+  ejt-server-images:
+    name: EJT Server Images
+    uses: ./.github/workflows/zxc-build-ejt-server-images.yaml
+    with:
+      tag-version: v0.0.0-${{ github.sha }}
+      dry-run-enabled: true
