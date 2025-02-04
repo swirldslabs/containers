@@ -1,0 +1,6 @@
+# If you would like to allow only certain IP addresses, please enter one IP address per line
+# If no IP addresses are entered, all IP addresses will be allowed
+# You can specify IP masks, such as 192.168.2.*
+#
+# To restrict access to local connections, add 127.0.0.1 only.
+# This is recommended if you manage authentication with SSH tunneling.

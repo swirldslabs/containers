@@ -1,0 +1,2 @@
+# If you would like to allow only certain user names, please enter one user name per line
+# If no user names are entered, all user names will be allowed

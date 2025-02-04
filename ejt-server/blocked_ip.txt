@@ -1,0 +1,6 @@
+# If you would like to block certain IP addresses, please enter one IP address per line
+# You can specify IP masks, such as 192.168.2.*
+#
+# IP addresses are blocked from the set of allowed IP addresses in ip.txt.
+# In this way you can allow a larger network in ip.txt and then block smaller networks
+# or single IP addressed in this file
