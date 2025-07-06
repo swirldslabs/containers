@@ -28,13 +28,13 @@ on:
         description: "Operating System Image:"
         type: string
         required: false
-        default: "noble-20240801"
+        default: "noble-20250619"
 
       gcs-fuse-version:
         description: "GCS Fuse Version:"
         type: string
         required: false
-        default: "2.4.0"
+        default: "3.0.1"
 
       ## Linux Architectures for Multi-Arch Builds
       platforms:
