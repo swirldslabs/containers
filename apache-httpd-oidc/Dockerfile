@@ -3,11 +3,11 @@
 # Define Global Build Arguments
 #
 ########################################################################################################################
-ARG UBUNTU_TAG="noble-20240801"
-ARG S6_OVERLAY_VERSION="3.2.0.0"
-ARG APACHE_HTTPD_VERSION="2.4.58-1ubuntu8.4"
-ARG APACHE_HTTPD_MOD_OIDC_VERSION="2.4.15.1-1build3"
-ARG GCS_FUSE_VERSION="2.4.0"
+ARG UBUNTU_TAG="noble-20250619"
+ARG S6_OVERLAY_VERSION="3.2.1.0"
+ARG APACHE_HTTPD_VERSION="2.4.58-1ubuntu8.6"
+ARG APACHE_HTTPD_MOD_OIDC_VERSION="2.4.15.1-1ubuntu0.1"
+ARG GCS_FUSE_VERSION="3.0.1"
 ARG SOURCE_DATE_EPOCH="0"
 
 ########################################################################################################################
@@ -48,20 +48,20 @@ RUN ARCH="$(dpkg --print-architecture)" && \
 ####    S6 Install     ####
 ###########################
 RUN set -eux; \
-        NOARCH_PKG_ESUM="4b0c0907e6762814c31850e0e6c6762c385571d4656eb8725852b0b1586713b6" \
+        NOARCH_PKG_ESUM="42e038a9a00fc0fef70bf0bc42f625a9c14f8ecdfe77d4ad93281edf717e10c5" \
         NOARCH_BINARY_URL="https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz" \
         ARCH="$(dpkg --print-architecture)"; \
         case "${ARCH}" in \
            aarch64|arm64) \
-             ARCH_PKG_ESUM='868973e98210257bba725ff5b17aa092008c9a8e5174499e38ba611a8fc7e473'; \
+             ARCH_PKG_ESUM='c8fd6b1f0380d399422fc986a1e6799f6a287e2cfa24813ad0b6a4fb4fa755cc'; \
              ARCH_BINARY_URL="https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-aarch64.tar.xz"; \
              ;; \
           amd64|i386:x86-64) \
-            ARCH_PKG_ESUM='ad982a801bd72757c7b1b53539a146cf715e640b4d8f0a6a671a3d1b560fe1e2'; \
+            ARCH_PKG_ESUM='8bcbc2cada58426f976b159dcc4e06cbb1454d5f39252b3bb0c778ccf71c9435'; \
             ARCH_BINARY_URL="https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz"; \
             ;; \
            ppc64el|powerpc:common64) \
-             ARCH_PKG_ESUM='a5548e188e788c0bbf480c525cc08d1a6ce369a8e3aa113d7ac038f3da0c73d0'; \
+             ARCH_PKG_ESUM='4fe93725bf506926414608558e7402178437814001b9d93464e71686a4aa1260'; \
              ARCH_BINARY_URL="https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-powerpc64le.tar.xz"; \
              ;; \
            *) \
