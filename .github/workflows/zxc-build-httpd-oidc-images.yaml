@@ -28,7 +28,7 @@ on:
         description: "Operating System Image:"
         type: string
         required: false
-        default: "noble-20250619"
+        default: "bookworm-20250811-slim"
 
       gcs-fuse-version:
         description: "GCS Fuse Version:"
@@ -137,5 +137,5 @@ jobs:
             ${{ steps.registry.outputs.prefix }}/apache-httpd-oidc:${{ steps.docker-tag.outputs.version }}-${{ inputs.base-os-image }}
           build-args: |
             SOURCE_DATE_EPOCH=${{ steps.commit.outputs.source-date }}
-            UBUNTU_TAG=${{ inputs.base-os-image }}
+            OS_VERSION_TAG=${{ inputs.base-os-image }}
             GCS_FUSE_VERSION=${{ inputs.gcs-fuse-version }}

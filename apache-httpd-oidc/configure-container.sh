@@ -51,7 +51,8 @@ rm -f /etc/apache2/sites-available/000-default.conf
 
 # Disable cgi-bin support
 a2disconf serve-cgi-bin >/dev/null
-a2disconf auth_openidc >/dev/null
+# The below line is not valid on Debian
+#a2disconf auth_openidc >/dev/null
 
 # Rewrite ports.conf to use 8080 & 8443
 </etc/apache2/ports.conf \
