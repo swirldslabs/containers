@@ -83,8 +83,8 @@ jobs:
 
       - name: Check for Existing Releases
         run: |
-          if gh release view httpd-oidc-v${{ steps.tag.outputs.version }} --json id >/dev/null 2>&1; then
-            echo "::error title=Release Version::Release httpd-oidc-v${{ steps.tag.outputs.version }} already exists and may not be redeployed."
+          if gh release view icmpulse-v${{ steps.tag.outputs.version }} --json id >/dev/null 2>&1; then
+            echo "::error title=Release Version::Release icmpulse-v${{ steps.tag.outputs.version }} already exists and may not be redeployed."
             exit 1
           fi
 
