@@ -3,10 +3,8 @@
 # Define Global Build Arguments
 #
 ########################################################################################################################
-ARG UBUNTU_TAG="noble-20250619"
+ARG OS_VERSION_TAG="bookworm-20250811-slim"
 ARG S6_OVERLAY_VERSION="3.2.1.0"
-ARG APACHE_HTTPD_VERSION="2.4.58-1ubuntu8.6"
-ARG APACHE_HTTPD_MOD_OIDC_VERSION="2.4.15.1-1ubuntu0.1"
 ARG GCS_FUSE_VERSION="3.0.1"
 ARG SOURCE_DATE_EPOCH="0"
 
@@ -15,12 +13,10 @@ ARG SOURCE_DATE_EPOCH="0"
 # Setup S6 Overlay Base Layer
 #
 ########################################################################################################################
-FROM ubuntu:${UBUNTU_TAG} AS operating-system-base-interim
+FROM debian:${OS_VERSION_TAG} AS operating-system-base-interim
 # Define Build Arguments
 ARG SOURCE_DATE_EPOCH
 ARG S6_OVERLAY_VERSION
-ARG APACHE_HTTPD_VERSION
-ARG APACHE_HTTPD_MOD_OIDC_VERSION
 ARG GCS_FUSE_VERSION
 
 # Define Standard Environment Variables
@@ -33,9 +29,9 @@ RUN --mount=type=bind,source=./repro-sources-list.sh,target=/usr/local/bin/repro
     repro-sources-list.sh && \
     apt-get update && \
     apt-get install --yes --no-install-recommends tar gzip zlib1g xz-utils curl ca-certificates tzdata \
-                                                  apache2=${APACHE_HTTPD_VERSION} apache2-bin=${APACHE_HTTPD_VERSION} \
-                                                  apache2-data=${APACHE_HTTPD_VERSION} apache2-utils=${APACHE_HTTPD_VERSION} \
-                                                  libapache2-mod-auth-openidc=${APACHE_HTTPD_MOD_OIDC_VERSION}
+                                                  apache2 apache2-bin \
+                                                  apache2-data apache2-utils \
+                                                  libapache2-mod-auth-openidc
 
 # Install the GCS FUSE driver software
 RUN ARCH="$(dpkg --print-architecture)" && \
