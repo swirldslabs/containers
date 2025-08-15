@@ -31,6 +31,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  icmpulse-exporter-images:
+    name: ICMPulse Exporter Images
+    uses: ./.github/workflows/zxc-build-icmpulse-exporter-images.yaml
+    with:
+      tag-version: v0.0.0-${{ github.sha }}
+      dry-run-enabled: true
+
   httpd-oidc-images:
     name: HTTPD OpenIDC Images
     uses: ./.github/workflows/zxc-build-httpd-oidc-images.yaml

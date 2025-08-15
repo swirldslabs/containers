@@ -1,0 +1,64 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    groups:
+      version:
+        dependency-type: "production"
+        applies-to: "version-updates"
+      security:
+        dependency-type: "production"
+        applies-to: "security-updates"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "docker"
+    directory: "/apache-httpd-oidc"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "build"
+      include: "scope"
+    groups:
+      version:
+        dependency-type: "production"
+        applies-to: "version-updates"
+      security:
+        dependency-type: "production"
+        applies-to: "security-updates"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "docker"
+    directory: "/ejt-server"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "build"
+      include: "scope"
+    groups:
+      version:
+        dependency-type: "production"
+        applies-to: "version-updates"
+      security:
+        dependency-type: "production"
+        applies-to: "security-updates"
+    open-pull-requests-limit: 5
+  - package-ecosystem: "docker"
+    directory: "/icmpulse-exporter"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "build"
+      include: "scope"
+    groups:
+      version:
+        dependency-type: "production"
+        applies-to: "version-updates"
+      security:
+        dependency-type: "production"
+        applies-to: "security-updates"
+    open-pull-requests-limit: 5
+
+
