@@ -43,6 +43,9 @@ export ICMPULSE_TARGETS_JSON_FILE ICMPULSE_TARGETS_JSON_CONTENT
 # ICMPulse Configuration File
 export ICMPULSE_CONFIG_FILE ICMPULSE_CONFIG_CONTENT
 
+# ICMPulse Optional Features
+export ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME
+
 # Kubernetes Configuration
 export KUBECONFIG
 
@@ -114,6 +117,7 @@ function configure_targets() {
 
 function configure_targets_from_kubernetes() {
   export KUBECONFIG
+  export ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME
   local ec=0
 
   log.notice "configure_targets_from_kubernetes(): configuring targets via kubernetes introspection"
@@ -137,7 +141,13 @@ function configure_targets_from_kubernetes() {
     return 3
   fi
 
-  ${JQ} -r '.items | map({ labels: {nodename: .metadata.name}, address: .status.addresses[] | select(.type == "InternalIP") | .address })' <<< "${nodes_list}" | \
+  local query=".items | map({ labels: {nodename: .metadata.name, target_type: \"internal\"}, address: .status.addresses[] | select(.type == \"InternalIP\") | .address })"
+
+  if [[ -n "${ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME}" ]] && [[ "${ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME}" == "true" || "${ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME}" -ge 1 ]]; then
+    query="${query} + map({ labels: {nodename: .metadata.name, target_type: \"external\"}, address: .status.addresses[] | select(.type == \"Hostname\") | .address })"
+  fi
+
+  ${JQ} -r "${query}" <<< "${nodes_list}" | \
     tee "${ICMPULSE_CONF_TARGETS_FILE}" >/dev/null 2>&1
   ec="${?}"
 
