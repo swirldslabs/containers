@@ -2,7 +2,11 @@
 # shellcheck shell=bash
 set -eo pipefail
 
+# Import helper functions
+source /usr/local/bin/entrypoint-helper.sh
+
 setcap 'cap_net_raw+ep' /usr/local/bin/ping_exporter || true
 
 ### Execute Ping Exporter ###
-exec s6-setuidgid icmpulse /usr/local/bin/ping_exporter --config.path=/var/run/icmpulse/config.yaml "${@}"
+exec_with_context /usr/local/bin/ping_exporter --config.path=/var/run/icmpulse/config.yaml "${@}"
+exit "${?}"

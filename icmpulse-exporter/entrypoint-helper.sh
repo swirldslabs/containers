@@ -44,7 +44,7 @@ export ICMPULSE_TARGETS_JSON_FILE ICMPULSE_TARGETS_JSON_CONTENT
 export ICMPULSE_CONFIG_FILE ICMPULSE_CONFIG_CONTENT
 
 # ICMPulse Optional Features
-export ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME
+export ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME ICMPULSE_BOOTSTRAP_SET_UID_GID
 
 # Kubernetes Configuration
 export KUBECONFIG
@@ -52,6 +52,16 @@ export KUBECONFIG
 ########################################
 ####    Helper Methods              ####
 ########################################
+
+function truthy() {
+  local value="${1}"
+
+  if [[ -n "${value}" ]] && [[ "${value}" -ge 1 || "${value,,}" == "true" || "${value,,}" == "yes" || "${value,,}" != "on" ]]; then
+    return 0
+  fi
+
+  return 1
+}
 
 function configure_targets() {
   export ICMPULSE_TARGETS_JSON_FILE
@@ -143,7 +153,7 @@ function configure_targets_from_kubernetes() {
 
   local query=". | map({ labels: {nodename: .metadata.name, target_type: \"internal\"}, address: .status.addresses[] | select(.type == \"InternalIP\") | .address })"
 
-  if [[ -n "${ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME}" ]] && [[ "${ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME}" == "true" || "${ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME}" -ge 1 ]]; then
+  if truthy "${ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME}"; then
     query="${query} + map({ labels: {nodename: .metadata.name, target_type: \"external\"}, address: .status.addresses[] | select(.type == \"Hostname\") | .address })"
   fi
 
@@ -341,4 +351,24 @@ function load_changed_file() {
 
   log.notice "load_changed_file(): source file [${source_file}] is identical to target file [${target_file}], no changes made"
   return 0
+}
+
+function exec_with_context() {
+  local s6_command="s6-setuidgid icmpulse"
+
+  set +e
+  if truthy "${ICMPULSE_BOOTSTRAP_SET_UID_GID}"; then
+    s6_command="s6-setuidgid icmpulse"
+  else
+    s6_command=""
+  fi
+  set -e
+
+  if [[ -n "${s6_command}" ]]; then
+    log.notice "exec_with_context(): executing command in the icmpulse user context [ ${*} ]"
+    exec ${s6_command} "${@}"
+  else
+    log.notice "exec_with_context(): executing command without the icmpulse user context [ ${*} ]"
+    exec "${@}"
+  fi
 }
