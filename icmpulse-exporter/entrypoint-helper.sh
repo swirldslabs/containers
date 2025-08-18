@@ -141,7 +141,7 @@ function configure_targets_from_kubernetes() {
     return 3
   fi
 
-  local query=".items | map({ labels: {nodename: .metadata.name, target_type: \"internal\"}, address: .status.addresses[] | select(.type == \"InternalIP\") | .address })"
+  local query=". | map({ labels: {nodename: .metadata.name, target_type: \"internal\"}, address: .status.addresses[] | select(.type == \"InternalIP\") | .address })"
 
   if [[ -n "${ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME}" ]] && [[ "${ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME}" == "true" || "${ICMPULSE_K8S_NODE_INCLUDE_HOSTNAME}" -ge 1 ]]; then
     query="${query} + map({ labels: {nodename: .metadata.name, target_type: \"external\"}, address: .status.addresses[] | select(.type == \"Hostname\") | .address })"
