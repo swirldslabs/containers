@@ -63,6 +63,19 @@ function truthy() {
   return 1
 }
 
+
+function rtrim() {
+  sed -E 's/[[:space:]]+$//'
+}
+
+function ltrim() {
+  sed -E 's/^[[:space:]]+//'
+}
+
+function trim() {
+  ltrim | rtrim
+}
+
 function configure_targets() {
   export ICMPULSE_TARGETS_JSON_FILE
   export ICMPULSE_TARGETS_JSON_CONTENT
@@ -378,6 +391,7 @@ function ping_exporter_args() {
   [[ -n "${ICMPULSE_WEB_TELEMETRY_PATH}" ]] && argv="${argv} --web.telemetry-path '${ICMPULSE_WEB_TELEMETRY_PATH}'"
   [[ -n "${ICMPULSE_LOG_LEVEL}" ]] && argv="${argv} --log.level ${ICMPULSE_LOG_LEVEL}"
 
-  printf "%s" "${argv}" | tr -d '[:space:]'
+  printf "%s" "${argv}" | trim
   return 0
 }
+
