@@ -5,7 +5,8 @@ set -eo pipefail
 # Import helper functions
 source /usr/local/bin/entrypoint-helper.sh
 
-setcap 'cap_net_raw+ep' /usr/local/bin/ping_exporter || true
+# Best effort to ensure the capabilities are set correctly
+setcap 'cap_net_raw+ep' /usr/local/bin/ping_exporter >/dev/null 2>&1 || true
 
 ### Execute Ping Exporter ###
 exec_with_context /usr/local/bin/ping_exporter --config.path=/var/run/icmpulse/config.yaml "${@}"

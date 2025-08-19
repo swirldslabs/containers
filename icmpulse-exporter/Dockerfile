@@ -106,7 +106,8 @@ RUN set -eux; \
         tar -C /usr/local/bin/ -xzf /tmp/ping_exporter.tar.gz ping_exporter; \
         rm -f /tmp/ping_exporter.tar.gz; \
         chmod +x /usr/local/bin/ping_exporter; \
-        mkdir -p /etc/icmpulse/
+        mkdir -p /etc/icmpulse/; \
+        setcap 'cap_net_raw+ep' /usr/local/bin/ping_exporter
 
 # Add the ping_exporter configuration template
 ADD conf/config.tpl.yaml /etc/icmpulse/config.tpl.yaml
