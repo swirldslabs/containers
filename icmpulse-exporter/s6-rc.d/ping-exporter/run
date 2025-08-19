@@ -8,6 +8,8 @@ source /usr/local/bin/entrypoint-helper.sh
 # Best effort to ensure the capabilities are set correctly
 setcap 'cap_net_raw+ep' /usr/local/bin/ping_exporter >/dev/null 2>&1 || true
 
+# Compute arguments for the ping_exporter
+argv="$(ping_exporter_args)"
+
 ### Execute Ping Exporter ###
-exec_with_context /usr/local/bin/ping_exporter --config.path=/var/run/icmpulse/config.yaml "${@}"
-exit "${?}"
+exec with_context /usr/local/bin/ping_exporter --config.path=/var/run/icmpulse/config.yaml "${argv}" "${@}"

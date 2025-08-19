@@ -353,7 +353,7 @@ function load_changed_file() {
   return 0
 }
 
-function exec_with_context() {
+function with_context() {
   local s6_command="s6-setuidgid icmpulse"
 
   set +e
@@ -371,4 +371,15 @@ function exec_with_context() {
     log.notice "exec_with_context(): executing command without the icmpulse user context [ ${*} ]"
     exec "${@}"
   fi
+}
+
+function ping_exporter_args() {
+  local argv=""
+
+  [[ -n "${ICMPULSE_WEB_LISTEN_ADDRESS}" ]] && argv="--web.listen-address '${ICMPULSE_WEB_LISTEN_ADDRESS}'"
+  [[ -n "${ICMPULSE_WEB_TELEMETRY_PATH}" ]] && argv="${argv} --web.telemetry-path '${ICMPULSE_WEB_TELEMETRY_PATH}'"
+  [[ -n "${ICMPULSE_LOG_LEVEL}" ]] && argv="${argv} --log.level ${ICMPULSE_LOG_LEVEL}"
+
+  printf "%s" "${argv}" | tr -d '[:space:]'
+  return 0
 }

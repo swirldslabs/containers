@@ -1,18 +1,11 @@
-web:
-  listen-address: {{ getenv "ICMPULSE_WEB_LISTEN_ADDRESS" ":9100" }}
-  telemetry-path: {{ getenv "ICMPULSE_WEB_TELEMETRY_PATH" "/metrics" }}
-
 ping:
-  interval: {{ getenv "ICMPULSE_PING_INTERVAL" "10s" }}
-  timeout: {{ getenv "ICMPULSE_PING_TIMEOUT" "5s" }}
-  size: {{ getenv "ICMPULSE_PING_SIZE" "56" }}
+  interval: {{ getenv "ICMPULSE_PING_INTERVAL" "10s" | quote }}
+  timeout: {{ getenv "ICMPULSE_PING_TIMEOUT" "5s" | quote }}
+  payload-size: {{ getenv "ICMPULSE_PING_SIZE" "56" }}
   history-size: {{ getenv "ICMPULSE_PING_HISTORY_SIZE" "20" }}
 
 dns:
-  refresh: {{ getenv "ICMPULSE_DNS_REFRESH" "5m" }}
-
-log:
-  level: {{ getenv "ICMPULSE_LOG_LEVEL" "info" }}
+  refresh: {{ getenv "ICMPULSE_DNS_REFRESH" "5m" | quote}}
 
 metrics:
   deprecated: disabled
