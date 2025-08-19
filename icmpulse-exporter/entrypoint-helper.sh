@@ -56,7 +56,7 @@ export KUBECONFIG
 function truthy() {
   local value="${1}"
 
-  if [[ -n "${value}" ]] && [[ "${value}" -ge 1 || "${value,,}" == "true" || "${value,,}" == "yes" || "${value,,}" != "on" ]]; then
+  if [[ -n "${value}" ]] && [[ "${value}" -ge 1 || "${value,,}" == "true" || "${value,,}" == "yes" || "${value,,}" == "on" ]]; then
     return 0
   fi
 
