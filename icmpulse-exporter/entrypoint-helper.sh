@@ -387,8 +387,8 @@ function exec_with_context() {
 function ping_exporter_args() {
   local argv=""
 
-  [[ -n "${ICMPULSE_WEB_LISTEN_ADDRESS}" ]] && argv="--web.listen-address '${ICMPULSE_WEB_LISTEN_ADDRESS}'"
-  [[ -n "${ICMPULSE_WEB_TELEMETRY_PATH}" ]] && argv="${argv} --web.telemetry-path '${ICMPULSE_WEB_TELEMETRY_PATH}'"
+  [[ -n "${ICMPULSE_WEB_LISTEN_ADDRESS}" ]] && argv="--web.listen-address ${ICMPULSE_WEB_LISTEN_ADDRESS}"
+  [[ -n "${ICMPULSE_WEB_TELEMETRY_PATH}" ]] && argv="${argv} --web.telemetry-path ${ICMPULSE_WEB_TELEMETRY_PATH}"
   [[ -n "${ICMPULSE_LOG_LEVEL}" ]] && argv="${argv} --log.level ${ICMPULSE_LOG_LEVEL}"
 
   printf "%s" "${argv}" | trim
