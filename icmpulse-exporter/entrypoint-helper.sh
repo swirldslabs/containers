@@ -239,10 +239,8 @@ function generate_exporter_config() {
     return 1
   fi
 
-  set -x
   ${GOMPLATE} -c targets=file://${ICMPULSE_CONF_TARGETS_FILE} -f "${ICMPULSE_CONF_TEMPLATE}" -o "${ICMPULSE_CONF_STAGING_FILE}" >/dev/null 2>&1
   local ec="${?}"
-  set +x
 
   if [[ "${ec}" -ne 0 ]]; then
     log.error "generate_exporter_config(): failed to generate exporter configuration from template (exit code: ${ec})"
@@ -353,7 +351,7 @@ function load_changed_file() {
   return 0
 }
 
-function with_context() {
+function exec_with_context() {
   local s6_command="s6-setuidgid icmpulse"
 
   set +e
