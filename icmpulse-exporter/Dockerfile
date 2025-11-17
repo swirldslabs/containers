@@ -32,7 +32,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN --mount=type=bind,source=./repro-sources-list.sh,target=/usr/local/bin/repro-sources-list.sh \
     repro-sources-list.sh && \
     apt-get update && \
-    apt-get install --yes --no-install-recommends tar gzip zlib1g xz-utils curl ca-certificates tzdata jq libcap2-bin
+    apt-get install --yes --no-install-recommends tar gzip zlib1g xz-utils curl ca-certificates tzdata jq libcap2-bin && \
+    apt-get install --yes --no-install-recommends iputils-ping traceroute iputils-tracepath dnsutils mtr-tiny
 
 ###############################
 ####    KubeCtl Install    ####
