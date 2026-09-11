@@ -30,7 +30,7 @@ export HTTPD_SITE_SSL_CERT_FILE HTTPD_SITE_SSL_KEY_FILE HTTPD_SITE_CA_FILE
 # OIDC Support
 export OIDC_AUTH_ENABLED OIDC_PROVIDER_METADATA_URL OIDC_CLIENT_ID OIDC_REDIRECT_URI
 export OIDC_CLIENT_SECRET OIDC_CRYPTO_PASSPHRASE
-export OIDC_SCOPE OIDC_REMOTE_USER_CLAIM
+export OIDC_SCOPE OIDC_REMOTE_USER_CLAIM OIDC_X_FORWARDED_HEADERS
 
 # GCSFuse Support
 export GCS_FUSE_ENABLED GCS_FUSE_CONFIG_FILE GCS_FUSE_BUCKET_NAME GCS_FUSE_MOUNT_POINT
@@ -199,6 +199,7 @@ function configure_oidc_protection {
   fi
 
   configure_oidc_remote_user_claim || return "${?}"
+  configure_oidc_x_forwarded_headers || return "${?}"
 
   if [[ -z "${OIDC_SCOPE}" ]]; then
     log.notice "Defaulting the OIDC_SCOPE variable, because no value was provided [openid email profile]"
@@ -221,6 +222,17 @@ function configure_oidc_remote_user_claim {
   log.notice "Configuring the OIDC remote user claim [${OIDC_REMOTE_USER_CLAIM}]"
   local path="${HTTPD_CONF_DIRECTORY}/conf-available/oidc-provider.conf"
   uncomment_config_element "${path}" "OIDCRemoteUserClaim"
+  return "${?}"
+}
+
+function configure_oidc_x_forwarded_headers {
+  export OIDC_X_FORWARDED_HEADERS
+
+  [[ -z "${OIDC_X_FORWARDED_HEADERS}" ]] && return "0"
+
+  log.notice "Configuring the OIDC forwarded headers [${OIDC_X_FORWARDED_HEADERS}]"
+  local path="${HTTPD_CONF_DIRECTORY}/conf-available/oidc-provider.conf"
+  uncomment_config_element "${path}" "OIDCXForwardedHeaders"
   return "${?}"
 }
 
