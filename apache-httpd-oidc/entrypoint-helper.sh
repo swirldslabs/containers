@@ -21,6 +21,7 @@ export HTTPD_RENDER_SITE_CONFIG
 
 # Site Configuration
 export HTTPD_SITE_ROOT_PATH HTTPD_SITE_SERVER_NAME HTTPD_SITE_ADMIN_EMAIL HTTPD_SITE_DIRECTORY_INDEX
+export HTTPD_SITE_DIRECTORY_LISTING_ENABLED HTTPD_SITE_DIRECTORY_OPTIONS
 
 # SSL Support
 export HTTPD_SITE_HTTP_PORT HTTPD_SITE_HTTPS_PORT
@@ -162,6 +163,8 @@ function configure_virtual_hosts {
     log.notice "Directory index support has been enabled, using user provided index file name [${HTTPD_SITE_DIRECTORY_INDEX}]"
   fi
 
+  configure_directory_listing || return "${?}"
+
   if [[ -z "${HTTPD_SITE_ROOT_PATH}" ]]; then
     log.warning "Defaulting the HTTPD_SITE_ROOT_PATH environment because none was provided"
     HTTPD_SITE_ROOT_PATH="/var/www/html"
@@ -186,6 +189,25 @@ function configure_virtual_hosts {
   a2ensite ${site_config} >/dev/null || return "${?}"
   configure_site_server_name "${site_config}" || return "${?}"
   configure_site_admin_email "${site_config}" || return "${?}"
+
+  return "0"
+}
+
+# Derives HTTPD_SITE_DIRECTORY_OPTIONS, the Options list applied to the DocumentRoot <Directory>
+# block of every vhost template. HTTPD_SITE_DIRECTORY_OPTIONS is an implementation detail and is
+# always overwritten here; HTTPD_SITE_DIRECTORY_LISTING_ENABLED is the supported knob. The toggle is
+# opt-out: only an explicit false or 0 drops Indexes, so leaving the variable unset preserves the
+# behavior this image shipped before the variable existed.
+function configure_directory_listing {
+  export HTTPD_SITE_DIRECTORY_LISTING_ENABLED HTTPD_SITE_DIRECTORY_OPTIONS
+
+  if [[ "${HTTPD_SITE_DIRECTORY_LISTING_ENABLED}" == false || "${HTTPD_SITE_DIRECTORY_LISTING_ENABLED}" == 0 ]]; then
+    log.notice "Directory listing has been disabled, because the HTTPD_SITE_DIRECTORY_LISTING_ENABLED variable was disabled"
+    HTTPD_SITE_DIRECTORY_OPTIONS="SymLinksIfOwnerMatch"
+  else
+    log.notice "Directory listing support is enabled, mod_autoindex will render an index for directories lacking a directory index file"
+    HTTPD_SITE_DIRECTORY_OPTIONS="SymLinksIfOwnerMatch Indexes"
+  fi
 
   return "0"
 }
