@@ -15,6 +15,7 @@ readonly GCS_FUSE_RUN_DIRECTORY="/var/run/gcsfuse-credentials"
 ########################################
 # Server Names
 export HTTPD_GLOBAL_SERVER_NAME HTTPD_DETECT_GLOBAL_SERVER_NAME
+export HTTPD_GLOBAL_REMOTE_IP_HEADER HTTPD_GLOBAL_REMOTE_IP_INTERNAL_PROXY HTTPD_GLOBAL_REMOTE_IP_TRUSTED_PROXY
 
 # Options Configuration
 export HTTPD_RENDER_SITE_CONFIG
@@ -146,6 +147,42 @@ function configure_server_name {
   fi
 
   return "0"
+}
+
+# Enables mod_remoteip so that %h, %a and REMOTE_ADDR report the visitor rather than the proxy
+# that fronts this container. Presence of a proxy variable is what enables the module: it cannot
+# be turned on without declaring which peers are trusted, because a module trusting every peer
+# would let any client set its own apparent address through the header.
+function configure_remote_ip {
+  export HTTPD_GLOBAL_REMOTE_IP_HEADER HTTPD_GLOBAL_REMOTE_IP_INTERNAL_PROXY HTTPD_GLOBAL_REMOTE_IP_TRUSTED_PROXY
+
+  if [[ -z "${HTTPD_GLOBAL_REMOTE_IP_INTERNAL_PROXY}" && -z "${HTTPD_GLOBAL_REMOTE_IP_TRUSTED_PROXY}" ]]; then
+    log.notice "Remote IP support is disabled, because no internal or trusted proxies were declared"
+    return "0"
+  fi
+
+  if [[ -z "${HTTPD_GLOBAL_REMOTE_IP_HEADER}" ]]; then
+    log.notice "Defaulting the HTTPD_GLOBAL_REMOTE_IP_HEADER variable because none was provided [X-Forwarded-For]"
+    HTTPD_GLOBAL_REMOTE_IP_HEADER="X-Forwarded-For"
+  fi
+
+  log.notice "Configuring remote IP support using the client address header [${HTTPD_GLOBAL_REMOTE_IP_HEADER}]"
+
+  local path="${HTTPD_CONF_DIRECTORY}/conf-available/remote-ip.conf"
+
+  if [[ -n "${HTTPD_GLOBAL_REMOTE_IP_INTERNAL_PROXY}" ]]; then
+    log.notice "Trusting the declared internal proxies [${HTTPD_GLOBAL_REMOTE_IP_INTERNAL_PROXY}]"
+    uncomment_config_element "${path}" "RemoteIPInternalProxy" || return "${?}"
+  fi
+
+  if [[ -n "${HTTPD_GLOBAL_REMOTE_IP_TRUSTED_PROXY}" ]]; then
+    log.notice "Trusting the declared trusted proxies [${HTTPD_GLOBAL_REMOTE_IP_TRUSTED_PROXY}]"
+    uncomment_config_element "${path}" "RemoteIPTrustedProxy" || return "${?}"
+  fi
+
+  a2enmod remoteip >/dev/null || return "${?}"
+  a2enconf remote-ip >/dev/null
+  return "${?}"
 }
 
 function configure_virtual_hosts {
